@@ -23,11 +23,11 @@ Web app layout: `backend/src/`, `frontend/src/` at repository root per plan.md.
 
 **Purpose**: Project initialization — both packages scaffolded with correct deps, scripts, and config before any source code.
 
-- [ ] T001 Initialize backend project: create backend/package.json (deps: express, drizzle-orm, better-sqlite3, zod, cors; devDeps: typescript, ts-node-dev, @types/express, @types/better-sqlite3, @types/cors, vitest, supertest, @types/supertest; scripts: dev, build, start, db:generate, db:migrate, test)
-- [ ] T002 [P] Create backend/tsconfig.json (strict: true, target: ES2020, module: CommonJS, outDir: dist) and backend/drizzle.config.ts (driver: better-sqlite3, schema: src/db/schema.ts, out: src/db/migrations)
-- [ ] T003 [P] Initialize frontend project: create frontend/package.json (deps: react, react-dom; devDeps: vite, @vitejs/plugin-react, typescript, @types/react, @types/react-dom, vitest, @testing-library/react, msw; scripts: dev, build, preview, test)
-- [ ] T004 [P] Create frontend/tsconfig.json (strict: true, jsx: react-jsx, target: ESNext) and frontend/vite.config.ts (React plugin, server.proxy /api → localhost:3001)
-- [ ] T005 [P] Create backend/.env (DATABASE_URL=./todo.db, PORT=3001, ALLOWED_ORIGIN=http://localhost:5173) and frontend/.env (VITE_API_URL=http://localhost:3001)
+- [X] T001 Initialize backend project: create backend/package.json (deps: express, drizzle-orm, better-sqlite3, zod, cors; devDeps: typescript, ts-node-dev, @types/express, @types/better-sqlite3, @types/cors, vitest, supertest, @types/supertest; scripts: dev, build, start, db:generate, db:migrate, test)
+- [X] T002 [P] Create backend/tsconfig.json (strict: true, target: ES2020, module: CommonJS, outDir: dist) and backend/drizzle.config.ts (driver: better-sqlite3, schema: src/db/schema.ts, out: src/db/migrations)
+- [X] T003 [P] Initialize frontend project: create frontend/package.json (deps: react, react-dom; devDeps: vite, @vitejs/plugin-react, typescript, @types/react, @types/react-dom, vitest, @testing-library/react, msw; scripts: dev, build, preview, test)
+- [X] T004 [P] Create frontend/tsconfig.json (strict: true, jsx: react-jsx, target: ESNext) and frontend/vite.config.ts (React plugin, server.proxy /api → localhost:3001)
+- [X] T005 [P] Create backend/.env (DATABASE_URL=./todo.db, PORT=3001, ALLOWED_ORIGIN=http://localhost:5173) and frontend/.env (VITE_API_URL=http://localhost:3001)
 
 ---
 
@@ -37,11 +37,11 @@ Web app layout: `backend/src/`, `frontend/src/` at repository root per plan.md.
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T006 Create Drizzle todos table schema (id: integer PK autoIncrement, text: text notNull, completed: integer boolean notNull default false, createdAt: text notNull $defaultFn ISO timestamp, userId: text nullable) in backend/src/db/schema.ts; export Todo and NewTodo inferred types
-- [ ] T007 Set up SQLite database connection: create Database instance from DATABASE_URL env var using better-sqlite3, wrap with drizzle(), export db singleton in backend/src/db/index.ts; run npm run db:generate then npm run db:migrate to create backend/src/db/migrations/
-- [ ] T008 [P] Create Zod request validation middleware: accept a ZodSchema, parse req.body, call next() on success, return 400 JSON { error: string } on failure in backend/src/middleware/validate.ts
-- [ ] T009 Create Express app in backend/src/app.ts: apply express.json(), cors({ origin: process.env.ALLOWED_ORIGIN ?? 'http://localhost:5173' }); export app without calling listen; create backend/src/server.ts as entry point: import app, call app.listen(PORT)
-- [ ] T010 [P] Create shared TypeScript types in frontend/src/types.ts (Todo interface: id, text, completed, createdAt, userId?) and thin fetch wrappers in frontend/src/api/todos.ts (getTodos, createTodo, toggleTodo, deleteTodo using VITE_API_URL, throw on non-ok responses)
+- [X] T006 Create Drizzle todos table schema (id: integer PK autoIncrement, text: text notNull, completed: integer boolean notNull default false, createdAt: text notNull $defaultFn ISO timestamp, userId: text nullable) in backend/src/db/schema.ts; export Todo and NewTodo inferred types
+- [X] T007 Set up SQLite database connection: create Database instance from DATABASE_URL env var using better-sqlite3, wrap with drizzle(), export db singleton in backend/src/db/index.ts; run npm run db:generate then npm run db:migrate to create backend/src/db/migrations/
+- [X] T008 [P] Create Zod request validation middleware: accept a ZodSchema, parse req.body, call next() on success, return 400 JSON { error: string } on failure in backend/src/middleware/validate.ts
+- [X] T009 Create Express app in backend/src/app.ts: apply express.json(), cors({ origin: process.env.ALLOWED_ORIGIN ?? 'http://localhost:5173' }); export app without calling listen; create backend/src/server.ts as entry point: import app, call app.listen(PORT)
+- [X] T010 [P] Create shared TypeScript types in frontend/src/types.ts (Todo interface: id, text, completed, createdAt, userId?) and thin fetch wrappers in frontend/src/api/todos.ts (getTodos, createTodo, toggleTodo, deleteTodo using VITE_API_URL, throw on non-ok responses)
 
 **Checkpoint**: Foundation ready — database migrated, app wiring complete, API client defined. User story implementation can now begin.
 
@@ -55,12 +55,12 @@ Web app layout: `backend/src/`, `frontend/src/` at repository root per plan.md.
 
 ### Implementation
 
-- [ ] T011 [US1] Add GET /todos route handler: query db for all todos ordered by createdAt DESC, return 200 JSON array (empty array if none), return 500 { error: "Failed to load todos." } on DB error; create backend/src/routes/todos.ts with Express Router and mount at /todos in backend/src/app.ts
-- [ ] T012 [US1] Implement useTodos custom hook in frontend/src/hooks/useTodos.ts: state (todos: Todo[], loading: boolean, error: string | null); useEffect calls getTodos() on mount, sets loading true before fetch and false after, sets error on failure
-- [ ] T013 [US1] Implement TodoList component in frontend/src/components/TodoList.tsx: accepts todos, loading, error props; renders loading spinner div when loading, error message paragraph when error, empty state message when todos.length === 0, or maps todos to TodoItem when populated
-- [ ] T014 [P] [US1] Implement TodoItem component in frontend/src/components/TodoItem.tsx: accepts todo prop (Todo type); renders todo.text in a span and a visual completed indicator (checked/unchecked) — no interactive callbacks yet
-- [ ] T015 [US1] Compose root component in frontend/src/App.tsx: call useTodos hook, render page header and TodoList with todos/loading/error props; import styles.css
-- [ ] T016 [P] [US1] Create global responsive CSS in frontend/src/styles.css: mobile-first layout (flex column, max-width container), header styles, list styles, loading state (spinner or text), empty state (centered message), error state (red/warning banner), active todo item row style; desktop breakpoint media query
+- [X] T011 [US1] Add GET /todos route handler: query db for all todos ordered by createdAt DESC, return 200 JSON array (empty array if none), return 500 { error: "Failed to load todos." } on DB error; create backend/src/routes/todos.ts with Express Router and mount at /todos in backend/src/app.ts
+- [X] T012 [US1] Implement useTodos custom hook in frontend/src/hooks/useTodos.ts: state (todos: Todo[], loading: boolean, error: string | null); useEffect calls getTodos() on mount, sets loading true before fetch and false after, sets error on failure
+- [X] T013 [US1] Implement TodoList component in frontend/src/components/TodoList.tsx: accepts todos, loading, error props; renders loading spinner div when loading, error message paragraph when error, empty state message when todos.length === 0, or maps todos to TodoItem when populated
+- [X] T014 [P] [US1] Implement TodoItem component in frontend/src/components/TodoItem.tsx: accepts todo prop (Todo type); renders todo.text in a span and a visual completed indicator (checked/unchecked) — no interactive callbacks yet
+- [X] T015 [US1] Compose root component in frontend/src/App.tsx: call useTodos hook, render page header and TodoList with todos/loading/error props; import styles.css
+- [X] T016 [P] [US1] Create global responsive CSS in frontend/src/styles.css: mobile-first layout (flex column, max-width container), header styles, list styles, loading state (spinner or text), empty state (centered message), error state (red/warning banner), active todo item row style; desktop breakpoint media query
 
 **Checkpoint**: User Story 1 fully functional — app loads, displays todos, handles all non-ideal states (loading, empty, error).
 
@@ -74,10 +74,10 @@ Web app layout: `backend/src/`, `frontend/src/` at repository root per plan.md.
 
 ### Implementation
 
-- [ ] T017 [US2] Add POST /todos route handler to backend/src/routes/todos.ts: apply validate(z.object({ text: z.string().trim().min(1).max(500) })) middleware, insert new todo into DB, return 201 with created todo; return 400 { error: "Todo text is required and must not be empty." } on validation failure; return 500 { error: "Failed to create todo." } on DB error
-- [ ] T018 [US2] Add addTodo(text: string) action to useTodos hook in frontend/src/hooks/useTodos.ts: call createTodo API, prepend returned todo to todos[] state on success, set error string on API failure
-- [ ] T019 [US2] Implement TodoForm component in frontend/src/components/TodoForm.tsx: controlled text input, client-side trim validation (show inline error if empty), calls onAdd(text) prop on valid submit, clears input after successful add, accepts onAdd: (text: string) => Promise<void> prop
-- [ ] T020 [US2] Add TodoForm to frontend/src/App.tsx: pass useTodos.addTodo as onAdd prop, render TodoForm above TodoList
+- [X] T017 [US2] Add POST /todos route handler to backend/src/routes/todos.ts: apply validate(z.object({ text: z.string().trim().min(1).max(500) })) middleware, insert new todo into DB, return 201 with created todo; return 400 { error: "Todo text is required and must not be empty." } on validation failure; return 500 { error: "Failed to create todo." } on DB error
+- [X] T018 [US2] Add addTodo(text: string) action to useTodos hook in frontend/src/hooks/useTodos.ts: call createTodo API, prepend returned todo to todos[] state on success, set error string on API failure
+- [X] T019 [US2] Implement TodoForm component in frontend/src/components/TodoForm.tsx: controlled text input, client-side trim validation (show inline error if empty), calls onAdd(text) prop on valid submit, clears input after successful add, accepts onAdd: (text: string) => Promise<void> prop
+- [X] T020 [US2] Add TodoForm to frontend/src/App.tsx: pass useTodos.addTodo as onAdd prop, render TodoForm above TodoList
 
 **Checkpoint**: User Stories 1 and 2 both fully functional — can view and create todos.
 
@@ -91,11 +91,11 @@ Web app layout: `backend/src/`, `frontend/src/` at repository root per plan.md.
 
 ### Implementation
 
-- [ ] T021 [US3] Add PATCH /todos/:id route handler to backend/src/routes/todos.ts: coerce id param (z.coerce.number().int().positive()), apply validate(z.object({ completed: z.boolean() })) middleware, return 404 { error: "Todo not found." } if absent, update completed field in DB, return 200 with updated todo; return 500 { error: "Failed to update todo." } on DB error
-- [ ] T022 [US3] Add toggleTodo(id: number, completed: boolean) action to useTodos hook in frontend/src/hooks/useTodos.ts: call toggleTodo API, update matching todo in todos[] state on success, set error string on failure
-- [ ] T023 [US3] Add toggle checkbox to TodoItem in frontend/src/components/TodoItem.tsx: checkbox input bound to todo.completed, calls onToggle(todo.id, !todo.completed) on change; accept onToggle?: (id: number, completed: boolean) => void prop; add completed CSS class to item when todo.completed is true
-- [ ] T024 [US3] Add completed todo styles to frontend/src/styles.css: .completed class applies text-decoration: line-through and muted/grey color to todo text; ensure visual distinction is clear at a glance
-- [ ] T025 [US3] Thread onToggle prop through TodoList in frontend/src/components/TodoList.tsx (accept and pass to each TodoItem) and wire useTodos.toggleTodo as onToggle in frontend/src/App.tsx
+- [X] T021 [US3] Add PATCH /todos/:id route handler to backend/src/routes/todos.ts: coerce id param (z.coerce.number().int().positive()), apply validate(z.object({ completed: z.boolean() })) middleware, return 404 { error: "Todo not found." } if absent, update completed field in DB, return 200 with updated todo; return 500 { error: "Failed to update todo." } on DB error
+- [X] T022 [US3] Add toggleTodo(id: number, completed: boolean) action to useTodos hook in frontend/src/hooks/useTodos.ts: call toggleTodo API, update matching todo in todos[] state on success, set error string on failure
+- [X] T023 [US3] Add toggle checkbox to TodoItem in frontend/src/components/TodoItem.tsx: checkbox input bound to todo.completed, calls onToggle(todo.id, !todo.completed) on change; accept onToggle?: (id: number, completed: boolean) => void prop; add completed CSS class to item when todo.completed is true
+- [X] T024 [US3] Add completed todo styles to frontend/src/styles.css: .completed class applies text-decoration: line-through and muted/grey color to todo text; ensure visual distinction is clear at a glance
+- [X] T025 [US3] Thread onToggle prop through TodoList in frontend/src/components/TodoList.tsx (accept and pass to each TodoItem) and wire useTodos.toggleTodo as onToggle in frontend/src/App.tsx
 
 **Checkpoint**: User Stories 1, 2, and 3 all fully functional — can view, create, and toggle todos.
 
@@ -109,10 +109,10 @@ Web app layout: `backend/src/`, `frontend/src/` at repository root per plan.md.
 
 ### Implementation
 
-- [ ] T026 [US4] Add DELETE /todos/:id route handler to backend/src/routes/todos.ts: coerce and validate id param, return 404 { error: "Todo not found." } if absent, delete from DB, return 204 No Content; return 500 { error: "Failed to delete todo." } on DB error
-- [ ] T027 [US4] Add deleteTodo(id: number) action to useTodos hook in frontend/src/hooks/useTodos.ts: call deleteTodo API, filter removed todo from todos[] state on success (204), set error string on API failure so item remains in list
-- [ ] T028 [US4] Add delete button to TodoItem in frontend/src/components/TodoItem.tsx: button element calls onDelete(todo.id) on click; accept onDelete?: (id: number) => void prop; style as small icon/text button
-- [ ] T029 [US4] Thread onDelete prop through TodoList in frontend/src/components/TodoList.tsx (accept and pass to each TodoItem) and wire useTodos.deleteTodo as onDelete in frontend/src/App.tsx
+- [X] T026 [US4] Add DELETE /todos/:id route handler to backend/src/routes/todos.ts: coerce and validate id param, return 404 { error: "Todo not found." } if absent, delete from DB, return 204 No Content; return 500 { error: "Failed to delete todo." } on DB error
+- [X] T027 [US4] Add deleteTodo(id: number) action to useTodos hook in frontend/src/hooks/useTodos.ts: call deleteTodo API, filter removed todo from todos[] state on success (204), set error string on API failure so item remains in list
+- [X] T028 [US4] Add delete button to TodoItem in frontend/src/components/TodoItem.tsx: button element calls onDelete(todo.id) on click; accept onDelete?: (id: number) => void prop; style as small icon/text button
+- [X] T029 [US4] Thread onDelete prop through TodoList in frontend/src/components/TodoList.tsx (accept and pass to each TodoItem) and wire useTodos.deleteTodo as onDelete in frontend/src/App.tsx
 
 **Checkpoint**: All four user stories fully functional — full CRUD loop complete.
 
@@ -122,8 +122,8 @@ Web app layout: `backend/src/`, `frontend/src/` at repository root per plan.md.
 
 **Purpose**: Final validation and any cross-cutting improvements.
 
-- [ ] T030 [P] Add delete button and error notification styles to frontend/src/styles.css: style delete button (subtle, positioned right of todo row), style error banner/toast for failed operations (dismissible or auto-clear)
-- [ ] T031 Validate full quickstart.md flow end-to-end: run backend (cd backend && npm run dev), run frontend (cd frontend && npm run dev), open http://localhost:5173, perform all 6 quickstart verification steps (empty state → create → toggle → delete → refresh → mobile viewport)
+- [X] T030 [P] Add delete button and error notification styles to frontend/src/styles.css: style delete button (subtle, positioned right of todo row), style error banner/toast for failed operations (dismissible or auto-clear)
+- [X] T031 Validate full quickstart.md flow end-to-end: run backend (cd backend && npm run dev), run frontend (cd frontend && npm run dev), open http://localhost:5173, perform all 6 quickstart verification steps (empty state → create → toggle → delete → refresh → mobile viewport)
 
 ---
 
