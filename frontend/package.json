@@ -1,0 +1,25 @@
+{
+  "name": "todo-frontend",
+  "version": "1.0.0",
+  "description": "Core Todo frontend — React + Vite",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^14.2.2",
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@vitejs/plugin-react": "^4.2.1",
+    "msw": "^2.2.11",
+    "typescript": "^5.4.3",
+    "vite": "^5.2.0",
+    "vitest": "^1.4.0"
+  }
+}
